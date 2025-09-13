@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrew.ai - My videos are real. Not AI.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: url('https://raw.githubusercontent.com/urosjojic-blip/skrew_assets/refs/heads/main/background.svg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(93, 63, 211, 0.7) 0%, rgba(123, 104, 238, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 50px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo {
+            width: 300px;
+            height: 120px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #C6FF00;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 100px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            color: #C6FF00;
+            margin-bottom: 40px;
+            font-weight: 700;
+            line-height: 1.5;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Animation for headline words */
+        .dropping-text-real, .dropping-text-ai {
+            display: inline-block;
+            font-size: 72px;
+            opacity: 0;
+            font-weight: 700;
+            color: #C6FF00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dropping-text-real {
+            animation: dropIn 1s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .dropping-text-ai {
+            animation: dropInDramatic 1.5s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes dropIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px) rotate(-25deg) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(5px) rotate(5deg) scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+        }
+
+        @keyframes dropInDramatic {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px) rotate(-45deg) scale(0.3);
+            }
+            40% {
+                opacity: 1;
+                transform: translateY(10px) rotate(10deg) scale(1.2);
+            }
+            60% {
+                transform: translateY(-5px) rotate(-5deg) scale(0.95);
+            }
+            80% {
+                transform: translateY(2px) rotate(2deg) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            margin-bottom: 12px;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        /* Download Section */
+        .download-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #C6FF00;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            scroll-margin-top: 20px;
+        }
+
+        .store-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .store-buttons a {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .store-buttons a:hover {
+            transform: scale(1.05);
+        }
+
+        .store-buttons img {
+            height: 50px;
+            width: auto;
+        }
+
+        /* Tagline Styles */
+        .tagline-container {
+            margin: 30px 0 50px 0;
+        }
+
+        .tagline-text {
+            font-size: 20px;
+            font-weight: 400;
+            color: #FFFFFF;
+            margin: 15px 0;
+            letter-spacing: 0.3px;
+            opacity: 0.85;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .tagline-text-highlight {
+            font-size: 24px;
+            font-weight: 600;
+            color: #C6FF00;
+            margin: 15px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.4;
+            display: block;
+        }
+
+        /* Meet Section */
+        .meet-section {
+            padding: 100px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .meet-title {
+            font-size: 64px;
+            color: #C6FF00;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .meet-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 50px;
+            border-radius: 15px;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .meet-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: 100px;
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-top: 40px solid rgba(255, 255, 255, 0.95);
+        }
+
+        .meet-card h3 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .meet-card p {
+            font-size: 16px;
+            line-height: 2;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Features Section */
+        .features-section {
+            text-align: center;
+            padding: 100px 40px;
+        }
+
+        .features-title {
+            font-size: 48px;
+            color: #C6FF00;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .features-subtitle {
+            font-size: 20px;
+            margin-bottom: 60px;
+        }
+
+        .app-previews {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .app-preview {
+            width: 280px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .preview-login {
+            background: linear-gradient(135deg, #B8B3E6 0%, #FFB6C1 100%);
+            padding: 30px 20px;
+        }
+
+        .preview-content {
+            background: white;
+            position: relative;
+        }
+
+        .preview-content img,
+        .preview-vlog img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .preview-vlog {
+            background: #000;
+            color: white;
+        }
+
+        /* Target Groups */
+        .target-title {
+            margin-top: 50px;
+            font-size: 24px;
+            margin-bottom: 40px;
+            font-weight: 600;
+            color: #C6FF00;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .target-groups {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .target-group {
+            background: rgba(198, 255, 0, 0.05);
+            border: 1px solid rgba(198, 255, 0, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 35px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .target-group:hover {
+            background: rgba(198, 255, 0, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(198, 255, 0, 0.1);
+        }
+
+        .target-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #C6FF00 0%, #A8E000 100%);
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(198, 255, 0, 0.3);
+        }
+
+        .target-description {
+            font-size: 16px;
+            color: #FFFFFF;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 40px 180px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Cookie Banner */
+        .cookie-banner {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            background-color: #000;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 99999;
+            max-width: 1200px;
+            width: calc(100% - 40px);
+        }
+
+        .cookie-banner.hidden {
+            display: none;
+        }
+
+        .cookie-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cookie-content p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .cookie-buttons a {
+            margin-right: auto;
+            color: #C6FF00;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .cookie-buttons button {
+            padding: 10px 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-reject {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-accept {
+            background: #C6FF00;
+            color: #000;
+        }
+
+        .cookie-buttons button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .logo {
+                width: 200px;
+                height: 80px;
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(93, 63, 211, 0.98);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+                line-height: 1.3;
+            }
+            
+            .dropping-text-real, .dropping-text-ai {
+                font-size: 42px;
+            }
+
+            .download-title {
+                font-size: 24px;
+            }
+
+            .store-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tagline-text {
+                font-size: 18px;
+            }
+
+            .tagline-text-highlight {
+                font-size: 20px;
+            }
+
+            .meet-title {
+                font-size: 42px;
+            }
+
+            .meet-card {
+                padding: 30px 20px;
+            }
+
+            .meet-card h3 {
+                font-size: 24px;
+            }
+
+            .meet-card::after {
+                right: 50px;
+            }
+
+            .features-title {
+                font-size: 36px;
+            }
+
+            .app-previews {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .target-groups {
+                padding: 0 20px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .dropping-text-real, .dropping-text-ai {
+                font-size: 32px;
+            }
+
+            .download-title {
+                font-size: 20px;
+            }
+
+            .meet-title {
+                font-size: 32px;
+            }
+
+            .features-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/urosjojic-blip/skrew_assets/refs/heads/main/logo.svg" alt="SKREW.AI">
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="nav-links" id="navLinks">
+            <a href="#about" onclick="closeMobileMenu()">About us</a>
+            <a href="#how" onclick="closeMobileMenu()">How it works</a>
+            <a href="#download" onclick="closeMobileMenu()">Download app</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>
+                My videos are <span class="dropping-text-real">real.</span> <span class="dropping-text-ai">Not AI.</span>
+            </h1>
+            
+            <p class="hero-subtitle" id="how" style="scroll-margin-top: 20px;">In a world of deepfakes, humans matter. Identities and truth matters.</p>
+            <p class="hero-subtitle" style="margin-top: 20px; line-height: 1.8;">We use proprietary algorithms and methodology to register physical events from your device as you record the video, encrypt in real-time with the video footage and send to our backend for decryption and authentication of the recorded material so that we can be 100% sure a human has recorded the video.</p>
+            
+            <h2 class="download-title" id="download">Download SkrewAI Camera App</h2>
+            <div class="store-buttons">
+                <a href="#">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/640px-Download_on_the_App_Store_Badge.svg.png" alt="Download on App Store">
+                </a>
+                <a href="#">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/640px-Google_Play_Store_badge_EN.svg.png" alt="Get it on Google Play">
+                </a>
+            </div>
+            
+            <!-- Tagline -->
+            <div class="tagline-container">
+                <div class="tagline-text">YOU interact with your device.</div>
+                <div class="tagline-text-highlight">We verify.</div>
+                <div class="tagline-text">You share with confidence.</div>
+            </div>
+        </section>
+
+        <!-- Meet the Skrew Section -->
+        <section class="meet-section">
+            <h2 class="meet-title">Meet the Skrew</h2>
+            <div class="meet-card">
+                <h3 id="about" style="scroll-margin-top: 20px;">Meet the Skrew 🤙</h3>
+                <p>The Skrew.ai "krew" is a group of friends, parents, and tech veterans who came together around a shared mission: protecting human authenticity in the age of AI.</p>
+                <p>Between us, we bring decades of experience in online video, video advertising, and internet technologies. But more importantly, we're parents who worry about our children's digital identities, friends who've seen misinformation spread unchecked, and technologists who understand both the promise and peril of AI.</p>
+                <p>When deepfakes started becoming indistinguishable from reality, we knew we had to act. We believe AI can be a force for good, but we also recognize the urgent need to defend against its misuse. That's why we built SkrewAI Camera – a free tool that ensures real human moments stay verifiably human.</p>
+                <p>Our technology is free to download and free to use. We believe everyone deserves access to truth verification – from journalists documenting events in conflict zones to parents sharing family moments online. No subscriptions, no paywalls. Just honest technology for an increasingly dishonest digital world.</p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">HUMANE. VERIFIABLE. WORKS.</h2>
+            <p class="features-subtitle">Protecting authentic identities in an AI-manipulated world.</p>
+            
+            <div class="app-previews">
+                <div class="app-preview preview-login">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="https://raw.githubusercontent.com/urosjojic-blip/skrew_assets/refs/heads/main/logo.svg" alt="SKREW.AI" style="width: 150px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #333;">User name</label>
+                        <input type="text" placeholder="👤" style="width: 100%; padding: 12px; border: none; border-radius: 5px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #333;">Password</label>
+                        <input type="password" placeholder="🔒" style="width: 100%; padding: 12px; border: none; border-radius: 5px;">
+                    </div>
+                    <button style="width: 100%; background: #5D3FD3; color: white; padding: 14px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; margin-bottom: 15px;">LOGIN</button>
+                    <p style="font-size: 14px; color: rgba(0,0,0,0.5);">OR</p>
+                    <button style="width: 100%; background: white; color: #333; padding: 12px; border: none; border-radius: 5px; font-size: 14px; margin-top: 15px;">G Sign In</button>
+                </div>
+
+                <div class="app-preview preview-content">
+                    <img src="https://raw.githubusercontent.com/urosjojic-blip/skrew_assets/refs/heads/main/image2.png" alt="Garden scene">
+                    <div style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: #5D3FD3; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid white;">
+                        <span style="color: white; font-size: 30px;">✓</span>
+                    </div>
+                </div>
+
+                <div class="app-preview preview-vlog">
+                    <div style="display: flex; justify-content: space-between; padding: 15px; font-size: 14px;">
+                        <span>Done</span>
+                        <span style="color: #C6FF00;">0:07</span>
+                        <span>Cancel</span>
+                    </div>
+                    <img src="https://raw.githubusercontent.com/urosjojic-blip/skrew_assets/refs/heads/main/image3.png" alt="Vlog">
+                    <div style="padding: 20px;">
+                        <h4 style="margin-bottom: 10px;">My Vlog ✅</h4>
+                        <p style="font-size: 12px; opacity: 0.8;">It was popularised in the 1960s with the release.</p>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
+                            <button style="background: white; color: black; padding: 8px 15px; border: none; border-radius: 5px;">📎 Copy</button>
+                            <button style="background: white; color: black; padding: 8px 15px; border: none; border-radius: 5px;">⬇ Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="target-title">SkrewAI Camera is perfect for:</p>
+            <div class="target-groups">
+                <div class="target-group">
+                    <span class="target-label">Journalists</span>
+                    <p class="target-description">Verify sources and combat misinformation with authenticated footage</p>
+                </div>
+                <div class="target-group">
+                    <span class="target-label">Content Creators</span>
+                    <p class="target-description">Protect your original work and prove authenticity to your audience</p>
+                </div>
+                <div class="target-group">
+                    <span class="target-label">Parents</span>
+                    <p class="target-description">Safeguard your children's identity from AI manipulation and misuse</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#">© 2025 Skrew.ai</a>
+                <a href="#">All rights reserved</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookies Settings</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-content">
+            <p>We (skrew.ai) and selected third parties (1) use cookies or similar technologies for technical purposes and, with your consent, for measurement as specified in the cookie policy.</p>
+            <p>You can freely give, deny, or withdraw your consent at any time by accessing the preferences panel. Denying consent may make related features unavailable.</p>
+            <p>Use the "Accept" button to consent. Use the "Reject" button to continue without accepting.</p>
+            <div class="cookie-buttons">
+                <a href="#">Learn more</a>
+                <button class="btn-reject">Reject</button>
+                <button class="btn-accept">ACCEPT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // Cookie banner
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieBanner = document.getElementById('cookieBanner');
+            const buttons = cookieBanner.querySelectorAll('button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    cookieBanner.classList.add('hidden');
+                });
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
